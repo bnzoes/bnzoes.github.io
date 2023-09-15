@@ -17,22 +17,50 @@
             justify-content: center;
             height: 100vh;
         }
+        .profile-pic-container {
+            position: relative;
+        }
         .profile-pic {
             width: 200px; /* Adjust the size as needed */
             height: 200px;
             border-radius: 50%;
             background-image: url('pfp.JPG'); /* Replace with your image URL */
             background-size: cover;
+            animation: constantColor 2s infinite alternate;
         }
         .btn-telegram {
             background-color: #68D391;
             color: #fff;
+            animation: pulsate 1s infinite;
+        }
+        /* Define the constantColor animation */
+        @keyframes constantColor {
+            0% {
+                border: 3px solid #68D391;
+            }
+            100% {
+                border: 3px solid #E53E3E;
+            }
+        }
+        /* Define the pulsate animation */
+        @keyframes pulsate {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="profile-pic mb-4"></div>
+        <div class="profile-pic-container">
+            <div class="profile-pic mb-4"></div>
+        </div>
         <h1 class="text-3xl text-white mb-4">bnzoes</h1>
         <a href="https://t.me/bnzoes" class="btn-telegram px-4 py-2 rounded-full text-lg hover:bg-green-400 hover:text-white transition duration-300 ease-in-out">Message me on Telegram</a>
     </div>
