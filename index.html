@@ -30,14 +30,27 @@
             margin: 0 auto 20px; /* Center it and add some margin below */
             display: block; /* Ensure it's centered properly */
             overflow: hidden; /* Hide overflowing gradient */
-            /* Tailwind CSS Gradient Border */
-            border-image: linear-gradient(135deg, #68D391, #4F46E5, #9333EA);
+            /* Tailwind CSS Gradient Border Animation */
+            border: 5px solid transparent; /* Initial transparent border */
+            border-image: linear-gradient(135deg, #68D391, #4F46E5, #9333EA); /* Gradient border colors */
             border-image-slice: 1;
-            border-width: 5px;
+            animation: borderAnimation 5s infinite alternate; /* Animation */
         }
 
         .profile-pic {
             max-width: 100%; /* Profile picture size within the container */
+        }
+
+        @keyframes borderAnimation {
+            0% {
+                border-width: 5px; /* Start with a 5px border width */
+            }
+            50% {
+                border-width: 10px; /* Transition to a 10px border width */
+            }
+            100% {
+                border-width: 5px; /* End with a 5px border width */
+            }
         }
 
         .accent-color {
