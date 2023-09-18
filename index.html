@@ -8,6 +8,13 @@
 
     <!-- Link to Tailwind CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Benzos Shop 📲👨‍💻">
+    <meta property="og:description" content="Lowest priced and large quantities, Connect with me on Session Messenger, anonymously and encrypted.">
+    <meta property="og:image" content="pfp.JPG">
+    <meta property="og:url" content="https://benzos.pw"> <!-- Updated URL for your website -->
+
     <style>
         body {
             background-color: #1a202c; /* Dark background */
@@ -18,28 +25,19 @@
         }
 
         .profile-pic-container {
-            animation: borderAnimation 5s infinite alternate; /* Gradient border animation */
             max-width: 150px; /* Set the maximum width for the profile picture container */
             border-radius: 50%; /* Make it round */
             margin: 0 auto 20px; /* Center it and add some margin below */
             display: block; /* Ensure it's centered properly */
             overflow: hidden; /* Hide overflowing gradient */
+            /* Tailwind CSS Gradient Border */
+            border-image: linear-gradient(135deg, #68D391, #4F46E5, #9333EA);
+            border-image-slice: 1;
+            border-width: 5px;
         }
 
         .profile-pic {
             max-width: 100%; /* Profile picture size within the container */
-        }
-
-        @keyframes borderAnimation {
-            0% {
-                border: 5px solid blue; /* Start with a blue border */
-            }
-            50% {
-                border: 5px solid green; /* Transition to a green border */
-            }
-            100% {
-                border: 5px solid purple; /* End with a purple border */
-            }
         }
 
         .accent-color {
