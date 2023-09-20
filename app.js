@@ -1,38 +1,37 @@
-// Global variables for pagination
+// Global variables for pagination and products per page
 let currentPage = 1;
-const productsPerPage = 40;
+const productsPerPage = 20;
+let filteredProducts = [];
 
 // Function to paginate and display products
-function displayProducts(products, page) {
+function displayProducts(page) {
     const productGrid = document.querySelector('.product-grid');
     productGrid.innerHTML = '';
 
     const startIndex = (page - 1) * productsPerPage;
     const endIndex = startIndex + productsPerPage;
 
-    for (let i = startIndex; i < endIndex && i < products.length; i++) {
-        const product = products[i];
+    for (let i = startIndex; i < endIndex && i < filteredProducts.length; i++) {
+        const product = filteredProducts[i];
         const productCard = createProductCard(product);
         productGrid.appendChild(productCard);
     }
 }
 
 // Function to handle search
-function handleSearch(products, searchTerm) {
+function handleSearch(searchTerm) {
     searchTerm = searchTerm.toLowerCase().trim();
 
-    const filteredProducts = products.filter((product) => {
+    filteredProducts = jsonData.filter((product) => {
         const title = product["Lucas Spreadsheet"].toLowerCase();
         return title.includes(searchTerm);
     });
-
-    return filteredProducts;
 }
 
 // Event listener to load products when the page loads
 document.addEventListener('DOMContentLoaded', async () => {
     const jsonData = await fetchProductsFromJSON();
-    let filteredProducts = jsonData;
+    filteredProducts = jsonData;
 
     const searchInput = document.getElementById('search');
     const searchButton = document.getElementById('searchButton');
@@ -41,22 +40,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     searchButton.addEventListener('click', () => {
         const searchTerm = searchInput.value;
-        filteredProducts = handleSearch(jsonData, searchTerm);
+        handleSearch(searchTerm);
         currentPage = 1;
-        displayProducts(filteredProducts, currentPage);
+        displayProducts(currentPage);
     });
 
     searchInput.addEventListener('input', () => {
         const searchTerm = searchInput.value;
-        filteredProducts = handleSearch(jsonData, searchTerm);
+        handleSearch(searchTerm);
         currentPage = 1;
-        displayProducts(filteredProducts, currentPage);
+        displayProducts(currentPage);
     });
 
     prevPageButton.addEventListener('click', () => {
         if (currentPage > 1) {
             currentPage--;
-            displayProducts(filteredProducts, currentPage);
+            displayProducts(currentPage);
         }
     });
 
@@ -64,10 +63,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         const maxPage = Math.ceil(filteredProducts.length / productsPerPage);
         if (currentPage < maxPage) {
             currentPage++;
-            displayProducts(filteredProducts, currentPage);
+            displayProducts(currentPage);
         }
     });
 
-    displayProducts(filteredProducts, currentPage);
+    displayProducts(currentPage);
 });
-
