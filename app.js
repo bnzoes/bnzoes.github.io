@@ -13,57 +13,35 @@ async function fetchProductsFromJSON() {
     }
 }
 
-// Function to display products in the grid
-function displayProducts(products) {
+// Function to display all products in the grid
+function displayAllProducts(products) {
     const productGrid = document.querySelector('.product-grid');
     productGrid.innerHTML = '';
 
-    // Filter products that have "Lucas Spreadsheet" property
-    const productsArray = products.filter(product => product["Lucas Spreadsheet"]);
-
-    productsArray.forEach((product, index) => {
+    products.forEach((product, index) => {
         const productCard = document.createElement('div');
-        productCard.classList.add('product-card', 'bg-gray-800', 'p-4', 'rounded-lg', 'cursor-pointer');
+        productCard.classList.add('product-card', 'bg-gray-800', 'p-4', 'rounded-lg');
         productCard.dataset.productId = index;
 
-        productCard.innerHTML = `
-            <h3 class="text-xl text-green-500">${product["Lucas Spreadsheet"]}</h3>
-            <p class="text-gray-400">Price: ${product["Column3"] || "N/A"}</p>
-            <a href="${product["Column4"] || "#"}" target="_blank" class="text-blue-500 hover:underline">Product Link</a>
-        `;
-
-        productCard.addEventListener('click', () => {
-            displayProductPopup(product);
-        });
+        // Loop through all properties and display them
+        for (const key in product) {
+            if (product.hasOwnProperty(key)) {
+                const value = product[key];
+                const keyValueElement = document.createElement('p');
+                keyValueElement.classList.add('text-gray-400');
+                keyValueElement.innerHTML = `<strong>${key}:</strong> ${value}`;
+                productCard.appendChild(keyValueElement);
+            }
+        }
 
         productGrid.appendChild(productCard);
     });
 }
 
-// Function to display product popup
-function displayProductPopup(product) {
-    const productPopup = document.getElementById('product-popup');
-    productPopup.innerHTML = `
-        <h2 class="text-2xl text-white">${product["Lucas Spreadsheet"]}</h2>
-        <p class="text-gray-400">Price: ${product["Column3"] || "N/A"}</p>
-        <a href="${product["Column4"] || "#"}" target="_blank" class="text-blue-500 hover:underline">Product Link</a>
-    `;
-    productPopup.style.display = 'block';
-}
-
-// Function to handle search functionality
-function searchProducts(query) {
-    const filteredProducts = products.filter((product) =>
-        product["Lucas Spreadsheet"].toLowerCase().includes(query.toLowerCase())
-    );
-    displayProducts(filteredProducts);
-}
-
 // Event listener to load products when the page loads
 document.addEventListener('DOMContentLoaded', async () => {
     const jsonData = await fetchProductsFromJSON();
-    products = jsonData; // Store the JSON data globally
-    displayProducts(jsonData);
+    displayAllProducts(jsonData);
 
     const searchInput = document.getElementById('search');
     searchInput.addEventListener('input', () => {
