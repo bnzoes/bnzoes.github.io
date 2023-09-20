@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Under Maintenance</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body {
             background-color: #121212;
@@ -11,29 +13,47 @@
             text-align: center;
             padding: 40px;
         }
-
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-        }
-
-        p {
-            font-size: 1.2rem;
-        }
-
-        a {
-            color: #3f88f4;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
     </style>
-    <title>Site Under Maintenance</title>
 </head>
 <body>
-    <h1>This site is under maintenance</h1>
-    <p>You can contact me on Telegram at <a href="https://t.me/bnzoes">@bnzoes</a></p>
+    <h1 class="text-3xl text-green-400 mb-4">This site is under maintenance</h1>
+    <p>You can contact me on Telegram at <a class="text-blue-400" href="https://t.me/bnzoes">@bnzoes</a></p>
+
+    <!-- Cryptocurrency Prices Section -->
+    <div id="crypto-section" class="mt-8">
+        <h2 class="text-xl text-green-400 mb-4">Cryptocurrency Prices</h2>
+        
+        <!-- Placeholder for Bitcoin Price -->
+        <div id="bitcoin-price" class="mb-4"></div>
+
+        <!-- Placeholder for Ethereum Price -->
+        <div id="ethereum-price" class="mb-4"></div>
+
+        <!-- Placeholder for Monero Price -->
+        <div id="monero-price" class="mb-8"></div>
+    </div>
+
+    <!-- JavaScript to Fetch Cryptocurrency Data -->
+    <script>
+        // Function to fetch cryptocurrency data from CoinGecko API
+        async function fetchCryptoData() {
+            const apiUrl = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,monero&vs_currencies=usd';
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                // Update the placeholders with the retrieved data
+                document.getElementById('bitcoin-price').textContent = `Bitcoin Price (USD): $${data.bitcoin.usd}`;
+                document.getElementById('ethereum-price').textContent = `Ethereum Price (USD): $${data.ethereum.usd}`;
+                document.getElementById('monero-price').textContent = `Monero Price (USD): $${data.monero.usd}`;
+            } catch (error) {
+                console.error('Error fetching cryptocurrency data:', error);
+            }
+        }
+
+        // Fetch cryptocurrency data when the page loads
+        fetchCryptoData();
+    </script>
 </body>
 </html>
