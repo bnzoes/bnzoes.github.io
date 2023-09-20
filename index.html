@@ -15,12 +15,11 @@
         <div class="product-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             <!-- Products will be dynamically loaded here -->
         </div>
-        <aside class="ads my-8">
-            <!-- Ads will be dynamically loaded here -->
-        </aside>
+        <button id="loadMore" class="hidden my-4 mx-auto block bg-green-500 text-white px-4 py-2 rounded-lg">Load More</button>
     </main>
-    <div class="search my-4">
+    <div class="search-container p-4">
         <input type="text" id="search" placeholder="Search products..." class="px-4 py-2 rounded-lg bg-gray-800 text-white">
+        <button id="searchButton" class="ml-2 bg-green-500 text-white px-4 py-2 rounded-lg">Search</button>
     </div>
     <div class="product-popup hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-50" id="product-popup">
         <!-- Product details will be displayed here -->
