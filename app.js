@@ -13,8 +13,8 @@ async function fetchProductsFromJSON() {
     }
 }
 
-// Function to display all products in the grid
-function displayAllProducts(products) {
+// Function to display selected properties of all products in the grid
+function displaySelectedProperties(products) {
     const productGrid = document.querySelector('.product-grid');
     productGrid.innerHTML = '';
 
@@ -23,25 +23,38 @@ function displayAllProducts(products) {
         productCard.classList.add('product-card', 'bg-gray-800', 'p-4', 'rounded-lg');
         productCard.dataset.productId = index;
 
-        // Loop through all properties and display them
-        for (const key in product) {
-            if (product.hasOwnProperty(key)) {
-                const value = product[key];
-                const keyValueElement = document.createElement('p');
-                keyValueElement.classList.add('text-gray-400');
-                keyValueElement.innerHTML = `<strong>${key}:</strong> ${value}`;
-                productCard.appendChild(keyValueElement);
-            }
-        }
+        // Display specific properties if they exist
+        const lucasSpreadsheet = product["Lucas Spreadsheet"];
+        const column3 = product["Column3"];
+        const column4 = product["Column4"];
 
-        productGrid.appendChild(productCard);
+        if (lucasSpreadsheet && column3 && column4) {
+            const titleElement = document.createElement('h3');
+            titleElement.classList.add('text-xl', 'text-green-500');
+            titleElement.textContent = lucasSpreadsheet;
+
+            const priceElement = document.createElement('p');
+            priceElement.classList.add('text-gray-400');
+            priceElement.textContent = `Price: ${column3}`;
+
+            const linkElement = document.createElement('a');
+            linkElement.href = column4;
+            linkElement.target = '_blank';
+            linkElement.textContent = 'Product Link';
+
+            productCard.appendChild(titleElement);
+            productCard.appendChild(priceElement);
+            productCard.appendChild(linkElement);
+
+            productGrid.appendChild(productCard);
+        }
     });
 }
 
 // Event listener to load products when the page loads
 document.addEventListener('DOMContentLoaded', async () => {
     const jsonData = await fetchProductsFromJSON();
-    displayAllProducts(jsonData);
+    displaySelectedProperties(jsonData);
 
     const searchInput = document.getElementById('search');
     searchInput.addEventListener('input', () => {
