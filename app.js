@@ -18,7 +18,7 @@ function displayProducts(products) {
     const productGrid = document.querySelector('.product-grid');
     productGrid.innerHTML = '';
 
-    // Extract products from the JSON data
+    // Filter products that have "Lucas Spreadsheet" property
     const productsArray = products.filter(product => product["Lucas Spreadsheet"]);
 
     productsArray.forEach((product, index) => {
@@ -63,7 +63,7 @@ function searchProducts(query) {
 document.addEventListener('DOMContentLoaded', async () => {
     const jsonData = await fetchProductsFromJSON();
     products = jsonData; // Store the JSON data globally
-    displayProducts(jsonData.products);
+    displayProducts(jsonData);
 
     const searchInput = document.getElementById('search');
     searchInput.addEventListener('input', () => {
