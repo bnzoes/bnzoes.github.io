@@ -1,100 +1,73 @@
-// Function to fetch products from the JSON file
-async function fetchProductsFromJSON() {
-    try {
-        const response = await fetch('products.json'); // Assuming it's in the root directory
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const jsonData = await response.json();
-        return jsonData;
-    } catch (error) {
-        console.error('Error fetching products:', error);
-        return [];
-    }
-}
+// Global variables for pagination
+let currentPage = 1;
+const productsPerPage = 40;
 
-// Function to display products in batches
-function displayProductsInBatches(products, batchSize) {
+// Function to paginate and display products
+function displayProducts(products, page) {
     const productGrid = document.querySelector('.product-grid');
-    const loadMoreButton = document.getElementById('loadMore');
-    let startIndex = 0;
+    productGrid.innerHTML = '';
 
-    function displayBatch() {
-        const endIndex = startIndex + batchSize;
-        for (let i = startIndex; i < endIndex && i < products.length; i++) {
-            const product = products[i];
-            const productCard = createProductCard(product);
-            productGrid.appendChild(productCard);
-        }
+    const startIndex = (page - 1) * productsPerPage;
+    const endIndex = startIndex + productsPerPage;
 
-        startIndex = endIndex;
-
-        if (startIndex >= products.length) {
-            loadMoreButton.style.display = 'none';
-        }
+    for (let i = startIndex; i < endIndex && i < products.length; i++) {
+        const product = products[i];
+        const productCard = createProductCard(product);
+        productGrid.appendChild(productCard);
     }
-
-    displayBatch();
-
-    loadMoreButton.addEventListener('click', displayBatch);
 }
 
-// Function to create a product card
-function createProductCard(product) {
-    const productCard = document.createElement('div');
-    productCard.classList.add('product-card', 'bg-gray-800', 'p-4', 'rounded-lg');
-    
-    const title = product["Lucas Spreadsheet"];
-    const price = product["Column3"];
-    const link = product["Column4"];
-
-    const titleElement = document.createElement('h3');
-    titleElement.classList.add('text-xl', 'text-green-500', 'mb-2');
-    titleElement.textContent = title;
-
-    const priceElement = document.createElement('p');
-    priceElement.classList.add('text-gray-400', 'mb-2');
-    priceElement.textContent = `Price: ${price}`;
-
-    const linkElement = document.createElement('a');
-    linkElement.href = link;
-    linkElement.target = '_blank';
-    linkElement.textContent = 'Product Link';
-
-    productCard.appendChild(titleElement);
-    productCard.appendChild(priceElement);
-    productCard.appendChild(linkElement);
-
-    return productCard;
-}
-
-// Function to filter products based on search terms
-function filterProducts(products, searchTerm) {
+// Function to handle search
+function handleSearch(products, searchTerm) {
     searchTerm = searchTerm.toLowerCase().trim();
 
-    return products.filter((product) => {
+    const filteredProducts = products.filter((product) => {
         const title = product["Lucas Spreadsheet"].toLowerCase();
         return title.includes(searchTerm);
     });
+
+    return filteredProducts;
 }
 
 // Event listener to load products when the page loads
 document.addEventListener('DOMContentLoaded', async () => {
     const jsonData = await fetchProductsFromJSON();
-    displayProductsInBatches(jsonData, 40);
+    let filteredProducts = jsonData;
 
     const searchInput = document.getElementById('search');
     const searchButton = document.getElementById('searchButton');
-    const loadMoreButton = document.getElementById('loadMore');
+    const prevPageButton = document.getElementById('prevPage');
+    const nextPageButton = document.getElementById('nextPage');
 
     searchButton.addEventListener('click', () => {
         const searchTerm = searchInput.value;
-        const filteredProducts = filterProducts(jsonData, searchTerm);
-        productGrid.innerHTML = '';
-        displayProductsInBatches(filteredProducts, 40);
+        filteredProducts = handleSearch(jsonData, searchTerm);
+        currentPage = 1;
+        displayProducts(filteredProducts, currentPage);
     });
 
     searchInput.addEventListener('input', () => {
-        loadMoreButton.style.display = 'none';
+        const searchTerm = searchInput.value;
+        filteredProducts = handleSearch(jsonData, searchTerm);
+        currentPage = 1;
+        displayProducts(filteredProducts, currentPage);
     });
+
+    prevPageButton.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            displayProducts(filteredProducts, currentPage);
+        }
+    });
+
+    nextPageButton.addEventListener('click', () => {
+        const maxPage = Math.ceil(filteredProducts.length / productsPerPage);
+        if (currentPage < maxPage) {
+            currentPage++;
+            displayProducts(filteredProducts, currentPage);
+        }
+    });
+
+    displayProducts(filteredProducts, currentPage);
 });
+
