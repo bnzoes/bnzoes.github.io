@@ -13,51 +13,88 @@ async function fetchProductsFromJSON() {
     }
 }
 
-// Function to display selected properties of all products in the grid
-function displaySelectedProperties(products) {
+// Function to display products in batches
+function displayProductsInBatches(products, batchSize) {
     const productGrid = document.querySelector('.product-grid');
-    productGrid.innerHTML = '';
+    const loadMoreButton = document.getElementById('loadMore');
+    let startIndex = 0;
 
-    products.forEach((product, index) => {
-        const productCard = document.createElement('div');
-        productCard.classList.add('product-card', 'bg-gray-800', 'p-4', 'rounded-lg');
-        productCard.dataset.productId = index;
-
-        // Display specific properties if they exist
-        const lucasSpreadsheet = product["Lucas Spreadsheet"];
-        const column3 = product["Column3"];
-        const column4 = product["Column4"];
-
-        if (lucasSpreadsheet && column3 && column4) {
-            const titleElement = document.createElement('h3');
-            titleElement.classList.add('text-xl', 'text-green-500');
-            titleElement.textContent = lucasSpreadsheet;
-
-            const priceElement = document.createElement('p');
-            priceElement.classList.add('text-gray-400');
-            priceElement.textContent = `Price: ${column3}`;
-
-            const linkElement = document.createElement('a');
-            linkElement.href = column4;
-            linkElement.target = '_blank';
-            linkElement.textContent = 'Product Link';
-
-            productCard.appendChild(titleElement);
-            productCard.appendChild(priceElement);
-            productCard.appendChild(linkElement);
-
+    function displayBatch() {
+        const endIndex = startIndex + batchSize;
+        for (let i = startIndex; i < endIndex && i < products.length; i++) {
+            const product = products[i];
+            const productCard = createProductCard(product);
             productGrid.appendChild(productCard);
         }
+
+        startIndex = endIndex;
+
+        if (startIndex >= products.length) {
+            loadMoreButton.style.display = 'none';
+        }
+    }
+
+    displayBatch();
+
+    loadMoreButton.addEventListener('click', displayBatch);
+}
+
+// Function to create a product card
+function createProductCard(product) {
+    const productCard = document.createElement('div');
+    productCard.classList.add('product-card', 'bg-gray-800', 'p-4', 'rounded-lg');
+    
+    const title = product["Lucas Spreadsheet"];
+    const price = product["Column3"];
+    const link = product["Column4"];
+
+    const titleElement = document.createElement('h3');
+    titleElement.classList.add('text-xl', 'text-green-500', 'mb-2');
+    titleElement.textContent = title;
+
+    const priceElement = document.createElement('p');
+    priceElement.classList.add('text-gray-400', 'mb-2');
+    priceElement.textContent = `Price: ${price}`;
+
+    const linkElement = document.createElement('a');
+    linkElement.href = link;
+    linkElement.target = '_blank';
+    linkElement.textContent = 'Product Link';
+
+    productCard.appendChild(titleElement);
+    productCard.appendChild(priceElement);
+    productCard.appendChild(linkElement);
+
+    return productCard;
+}
+
+// Function to filter products based on search terms
+function filterProducts(products, searchTerm) {
+    searchTerm = searchTerm.toLowerCase().trim();
+
+    return products.filter((product) => {
+        const title = product["Lucas Spreadsheet"].toLowerCase();
+        return title.includes(searchTerm);
     });
 }
 
 // Event listener to load products when the page loads
 document.addEventListener('DOMContentLoaded', async () => {
     const jsonData = await fetchProductsFromJSON();
-    displaySelectedProperties(jsonData);
+    displayProductsInBatches(jsonData, 40);
 
     const searchInput = document.getElementById('search');
+    const searchButton = document.getElementById('searchButton');
+    const loadMoreButton = document.getElementById('loadMore');
+
+    searchButton.addEventListener('click', () => {
+        const searchTerm = searchInput.value;
+        const filteredProducts = filterProducts(jsonData, searchTerm);
+        productGrid.innerHTML = '';
+        displayProductsInBatches(filteredProducts, 40);
+    });
+
     searchInput.addEventListener('input', () => {
-        searchProducts(searchInput.value);
+        loadMoreButton.style.display = 'none';
     });
 });
